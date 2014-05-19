@@ -79,6 +79,9 @@
 		2E184747192600E200EBEBED /* PhotoSprite.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E18464C192600E200EBEBED /* PhotoSprite.mm */; };
 		2E184748192600E200EBEBED /* PhySprite.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E18464E192600E200EBEBED /* PhySprite.mm */; };
 		2E184749192600E200EBEBED /* PunchingBag.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E184650192600E200EBEBED /* PunchingBag.mm */; };
+		2E5DE5821929E77C005C770F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E5DE5811929E77C005C770F /* libsqlite3.dylib */; };
+		2E5DE5851929E83F005C770F /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5DE5841929E83F005C770F /* DBManager.m */; };
+		2E5DE5871929F4D0005C770F /* createandsharedata.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 2E5DE5861929F4D0005C770F /* createandsharedata.sqlite3 */; };
 		2E897E121925FD6200DAC8B3 /* b2CollideCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EE7384219236FBB001D5055 /* b2CollideCircle.cpp */; };
 		2E897E131925FD6200DAC8B3 /* CCDrawNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE736FB19236F36001D5055 /* CCDrawNode.m */; };
 		2E897E141925FD6200DAC8B3 /* CCDirector.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE736F719236F36001D5055 /* CCDirector.m */; };
@@ -559,6 +562,10 @@
 		2E18464E192600E200EBEBED /* PhySprite.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PhySprite.mm; sourceTree = "<group>"; };
 		2E18464F192600E200EBEBED /* PunchingBag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PunchingBag.h; sourceTree = "<group>"; };
 		2E184650192600E200EBEBED /* PunchingBag.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PunchingBag.mm; sourceTree = "<group>"; };
+		2E5DE5811929E77C005C770F /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		2E5DE5831929E83F005C770F /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
+		2E5DE5841929E83F005C770F /* DBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
+		2E5DE5861929F4D0005C770F /* createandsharedata.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; path = createandsharedata.sqlite3; sourceTree = "<group>"; };
 		2E897FA21925FD6200DAC8B3 /* CreateAndShare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CreateAndShare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE3FE0A1929C481002639A6 /* desk_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desk_background.png; sourceTree = "<group>"; };
 		2EE3FE0B1929C481002639A6 /* play_button_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play_button_bg.png; sourceTree = "<group>"; };
@@ -1091,6 +1098,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E5DE5821929E77C005C770F /* libsqlite3.dylib in Frameworks */,
 				2E897EF01925FD6200DAC8B3 /* CoreText.framework in Frameworks */,
 				2E897EF11925FD6200DAC8B3 /* MediaPlayer.framework in Frameworks */,
 				2E897EF21925FD6200DAC8B3 /* QuartzCore.framework in Frameworks */,
@@ -1130,6 +1138,7 @@
 		28DD84441368123300D5E241 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2E5DE5811929E77C005C770F /* libsqlite3.dylib */,
 				2EE82EF01925F9C8001AC07B /* MediaToolbox.framework */,
 				2EE6F7101924941000EC7ED9 /* CoreText.framework */,
 				28DD862F136813D800D5E241 /* MediaPlayer.framework */,
@@ -1210,6 +1219,8 @@
 				2E18443B192600E000EBEBED /* Physics */,
 				2E184446192600E000EBEBED /* RootViewController.h */,
 				2E184447192600E000EBEBED /* RootViewController.mm */,
+				2E5DE5831929E83F005C770F /* DBManager.h */,
+				2E5DE5841929E83F005C770F /* DBManager.m */,
 			);
 			path = Ctrl;
 			sourceTree = "<group>";
@@ -1286,6 +1297,7 @@
 		2E1845F8192600E100EBEBED /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2E5DE5861929F4D0005C770F /* createandsharedata.sqlite3 */,
 				2E5DE5801929DA0C005C770F /* Database */,
 				2EE3FE091929C444002639A6 /* Misc */,
 				2EE3FE081929C439002639A6 /* PageContents */,
@@ -2507,6 +2519,7 @@
 				2EE3FECD1929C672002639A6 /* alice_example4__brasilien_outline.png in Resources */,
 				2EE3FED31929C672002639A6 /* alice_example4__israel_zettel.png in Resources */,
 				2EE3FF021929C691002639A6 /* alice_example6__koerper_0.pvr.ccz in Resources */,
+				2E5DE5871929F4D0005C770F /* createandsharedata.sqlite3 in Resources */,
 				2EE3FED61929C672002639A6 /* alice_example4__japan_outline.png in Resources */,
 				2EE3FE6A1929C4C5002639A6 /* wood_in_bowl_drop1.mp3 in Resources */,
 			);
@@ -2738,6 +2751,7 @@
 				2E897EE21925FD6200DAC8B3 /* b2Collision.cpp in Sources */,
 				2E184738192600E200EBEBED /* ModalOverlay.mm in Sources */,
 				2E897EE61925FD6200DAC8B3 /* b2EdgeAndPolygonContact.cpp in Sources */,
+				2E5DE5851929E83F005C770F /* DBManager.m in Sources */,
 				2E897EE71925FD6200DAC8B3 /* CCGrid.m in Sources */,
 				2E897EE81925FD6200DAC8B3 /* b2TimeOfImpact.cpp in Sources */,
 				2E897EEA1925FD6200DAC8B3 /* CCFontDefinition.m in Sources */,

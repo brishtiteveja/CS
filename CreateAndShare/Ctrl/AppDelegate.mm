@@ -42,6 +42,7 @@
 #import "RootViewController.h"
 #import "CoreHolder.h"
 #import "Makros.h"
+#import "DBManager.h"
 
 
 #ifdef DIARY_LAUNCHER
@@ -173,8 +174,8 @@
 	// You can change anytime.
 	[CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];
 
-   
-	
+    DBManager* dbm = [DBManager getSharedInstance];
+	[dbm connectToDB];
 	// Removes the startup flicker
 	//
     //[self removeStartupFlicker];
