@@ -18,7 +18,7 @@
 @property (nonatomic,retain) NSString* databaseName;
 
 +(DBManager*)getSharedInstance;
--(BOOL)connectToDB;
+-(BOOL)createDB;
 -(BOOL)insertUserWithName:(NSString*) name Password:(NSString*) password;
 -(BOOL)insertCategoryWithUserID:(NSUInteger) userID CategoryName:(NSString*)categoryName;
 -(BOOL) saveData:(NSString*)registerNumber name:(NSString*)name

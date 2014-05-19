@@ -9,7 +9,7 @@
 #import "iCarouselExampleViewController.h"
 #import "CoreHolder.h"
 #import "AppDelegate.h"
-#import <sqlite3.h>
+#import "DBManager.h"
 
 @interface iCarouselExampleViewController () <UIActionSheetDelegate>
 
@@ -217,6 +217,10 @@
         //get a reference to the label in the recycled view
         label = (UILabel *)[view viewWithTag:1];
     }
+    
+    //Get category name from the database
+    
+    
     
     //set item label
     //remember to always set any properties of your carousel item
