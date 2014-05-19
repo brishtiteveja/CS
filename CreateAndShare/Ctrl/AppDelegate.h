@@ -37,6 +37,7 @@
 
 #import <UIKit/UIKit.h>
 #import "cocos2d.h"
+#import "iCarouselExampleViewController.h"
 
 @class RootViewController;
 
@@ -45,10 +46,12 @@
 	UIWindow			*window_;
 	RootViewController	*viewController;
     UINavigationController* navController;
+    iCarouselExampleViewController* categoryViewController;
 }
 
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) RootViewController *viewController;
 @property (nonatomic, retain) UINavigationController* navController;
+@property (nonatomic, retain) iCarouselExampleViewController* categoryViewController;
 
 @end

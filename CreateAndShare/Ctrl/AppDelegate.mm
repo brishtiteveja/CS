@@ -41,9 +41,8 @@
 #import "Config.h"
 #import "RootViewController.h"
 #import "CoreHolder.h"
-#import "Config.h"
 #import "Makros.h"
-#import "iCarouselExampleViewController.h"
+
 
 #ifdef DIARY_LAUNCHER
 #import "LauncherLayer.h"
@@ -54,6 +53,7 @@
 @synthesize window = window_;
 @synthesize viewController = viewController_;
 @synthesize navController = navController_;
+@synthesize categoryViewController = categoryViewController_;
 
 - (void) removeStartupFlicker
 {
@@ -117,11 +117,12 @@
 	// attach the openglView to the director
 	[director setView:glView];
     
+    
     // for rotation and other messages
     [director setDelegate:self];
     
     //for projection
-    //[director_ setProjection:kCCDirectorProjection2D];
+    [director setProjection:kCCDirectorProjection2D];
     
 //	// Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
 	if( ! [director enableRetinaDisplay:YES] )
@@ -150,27 +151,22 @@
 	[director setDisplayStats:YES];
 #endif
 	
+    // Init the View Controller
     
-    
-	// Init the View Controller
-//	viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
-//    
-//	viewController.wantsFullScreenLayout = YES;
-//	
-//	// make the OpenGLView a child of the view controller
-//	[viewController setView:glView];
-
-//    navController = [[UINavigationController alloc] initWithRootViewController:director];
-//    navController.navigationBarHidden = YES;
+//    navController_ = [[UINavigationController alloc] initWithRootViewController:director];
+//    navController_.navigationBarHidden = YES;
     
     iCarouselExampleViewController* categoryViewController = [[iCarouselExampleViewController alloc] initWithNibName:nil bundle:nil];
     
     
 	// make the View Controller a child of the main window
 	[window_ addSubview: categoryViewController.view];
-	
+	//[window_ addSubview:navController_.view];
+    
 	[window_ makeKeyAndVisible];
     [window_ setRootViewController:categoryViewController];
+    //[window_ setRootViewController:navController_];
+    //NSLog(@"%@",window_);
 	
 	// Default texture format for PNG/BMP/TIFF/JPEG/GIF images
 	// It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
@@ -181,11 +177,11 @@
 	
 	// Removes the startup flicker
 	//
-    [self removeStartupFlicker];
-	
-	// startup
-//    CoreHolder *core = [CoreHolder sharedCoreHolder];
-//    [core firstStart];
+    //[self removeStartupFlicker];
+    // startup
+    //CoreHolder *core = [CoreHolder sharedCoreHolder];
+    //[core firstStart];
+
 }
 
 
