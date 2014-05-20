@@ -104,6 +104,36 @@ static sqlite3_stmt *statement = nil;
     return isSuccess;
 }
 
+-(NSInteger) getMaxCategoryNumber
+{
+    const char *dbpath = [databasePath UTF8String];
+    if(sqlite3_open(dbpath, &database) == SQLITE_OK){
+        NSString *maxSQL = [NSString stringWithFormat:@"select max(category_id) from category"];
+        const char *max_stmt = [maxSQL UTF8String];
+        sqlite3_prepare_v2(database, max_stmt, -1, &statement, NULL);
+//        NSLog(@"%d",sqlite3_step(statement));
+     
+
+        if (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            NSString *maxs = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+            NSLog(@"Max extraction succeeded.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return [maxs intValue];
+        }
+        else{
+            NSLog(@"Max extraction failed.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return NO;
+        }
+
+        sqlite3_reset(statement);
+    }
+    return NO;
+}
+
 -(BOOL)removeCategoryWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger)category_id{
     
     const char *dbpath = [databasePath UTF8String];
@@ -133,9 +163,7 @@ static sqlite3_stmt *statement = nil;
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK)
     {
-        NSString *insertSQL = [NSString stringWithFormat:@"insert into \
-                               category (user_id, category_id, category_name) values \
-                               (\"%d\",\"%d\",\"%@\")", user_id, category_id,
+        NSString *insertSQL = [NSString stringWithFormat:@"insert into category (user_id, category_id, category_name) values (\"%d\",\"%d\",\"%@\")", user_id, category_id,
                                category_name];
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(database, insert_stmt, -1, &statement, NULL);
@@ -208,36 +236,32 @@ static sqlite3_stmt *statement = nil;
     return nil;
 }
 
--(NSInteger)getCategoryIDWithUserID:(NSUInteger) user_id CategoryName:(NSString*)category_name
+- (NSMutableArray*) getCategoryIDsWithUserID:(NSUInteger) user_id
 {
     const char *dbpath = [databasePath UTF8String];
     if(sqlite3_open(dbpath, &database) == SQLITE_OK)
     {
-        NSString *querySQL = [NSString stringWithFormat:@"select id from category where \
-                              user_id=\"%d\" and category_name=\"%@\"", user_id,category_name];
+        NSString *querySQL = [NSString stringWithFormat:@"select category_id from category where \
+                              user_id=\"%d\"", user_id];
         const char *query_stmt = [querySQL UTF8String];
-        NSUInteger resultIndex = -1;
+        NSMutableArray *resultArray = [[NSMutableArray alloc]init];
         
         if(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
-            if(sqlite3_step(statement) == SQLITE_ROW){
-                NSString* cat_ids = [NSString stringWithFormat:@"%s",sqlite3_column_text(statement, 0)];
-                resultIndex = [cat_ids intValue];
-//                NSLog(@"Category ID = %d", resultIndex);
-                
-                sqlite3_finalize(statement);
-                sqlite3_close(database);
-                return resultIndex;
+            while(sqlite3_step(statement) == SQLITE_ROW){
+                //                NSLog(@"%s", sqlite3_column_text(statement, 0));
+                NSString *category_name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                [resultArray addObject:category_name];
             }
-            else{
-                NSLog(@"Failed to get category ID.");
-                return -1;
-            }
+            
+            sqlite3_close(database);
+            return resultArray;
         }
         
         sqlite3_reset(statement);
     }
-    return -1;
+    return nil;
 }
+
 //- (NSMutableArray*) getCategoryNameWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger) category_id
 //{
 //    const char *dbpath = [databasePath UTF8String];

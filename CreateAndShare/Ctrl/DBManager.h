@@ -26,6 +26,8 @@
       department:(NSString*)department year:(NSString*)year;
 -(NSArray*) findByRegisterNumber:(NSString*)registerNumber;
 -(NSMutableArray*) getCategoryNamesWithUserID:(NSUInteger) user_id;
+-(NSMutableArray*) getCategoryIDsWithUserID:(NSUInteger) user_id;
 -(NSMutableArray*) getCategoryNameWithUserID:(NSUInteger) user_id CategoryName:(NSUInteger) category_id;
+-(NSInteger) getMaxCategoryNumber;
 
 @end

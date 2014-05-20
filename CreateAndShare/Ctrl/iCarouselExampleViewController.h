@@ -16,7 +16,7 @@
 @interface iCarouselExampleViewController : UIViewController <iCarouselDataSource, iCarouselDelegate>
 {
     NSMutableArray* items;
-    NSMutableArray* categories;
+    NSMutableArray* categoryIDs;
     DBManager* dbm;
     
 }
@@ -29,7 +29,8 @@
 @property (nonatomic, strong) IBOutlet UIBarItem *orientationBarItem;
 @property (nonatomic, strong) IBOutlet UIBarItem *wrapBarItem;
 @property (nonatomic, strong) NSMutableArray *items;
-@property (nonatomic, retain) NSMutableArray * categories;
+@property (nonatomic, retain) NSMutableArray * categoryIDs;
+@property (nonatomic, assign) NSInteger categoryCount;
 @property (nonatomic, retain) DBManager* dbm;
 @property (nonatomic, assign) NSUInteger user_id;
 

@@ -29,7 +29,8 @@
 @synthesize wrap;
 @synthesize user_id;
 @synthesize items;
-@synthesize categories;
+@synthesize categoryIDs;
+@synthesize categoryCount;
 @synthesize dbm;
 
 - (void)setUp
@@ -45,13 +46,11 @@
     //Database manager instance
     dbm = [DBManager getSharedInstance];
     
-    categories = [dbm getCategoryNamesWithUserID:user_id];
+    items = [dbm getCategoryNamesWithUserID:user_id];
+    categoryCount = [dbm getMaxCategoryNumber];
     
-    for (int i = 0; i < [categories count]; i++)
-    {
-        [items addObject:@(i)];
-    }
-    
+    categoryIDs = [dbm getCategoryIDsWithUserID:user_id];
+    NSLog(@"%@",categoryIDs);
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -80,7 +79,7 @@
     categoryCarousel.dataSource = nil;
     pageCarousel.delegate = nil;
     pageCarousel.dataSource = nil;
-    [categories release];
+    [categoryIDs release];
     [items release];
     [dbm release];
     [super dealloc];
@@ -214,21 +213,13 @@
 - (IBAction)insertWorkbookCategory
 {
     NSInteger index = MAX(0, categoryCarousel.currentItemIndex);
-    NSLog(@"cur_idx=%d",index);
-    NSString* category = categories[index];
-    NSLog(@"cur_name=%@",category);
-    NSInteger lastIndex = categoryCarousel.numberOfItems - 1;
     
-    [items insertObject:@(categoryCarousel.numberOfItems) atIndex:index];
+    categoryCount++;
+    
+    [items insertObject:items[index] atIndex:index];
     [categoryCarousel insertItemAtIndex:index animated:YES];
-    [dbm insertCategoryWithUserID:user_id CategoryName:category];
-    [categories removeAllObjects];
-    categories = [dbm getCategoryNamesWithUserID:user_id];
-    NSInteger idx = [categories count] - 1;
-    NSString* obj = categories[idx];
-    [categories removeObjectAtIndex:idx];
-    [categories insertObject:category atIndex:index];
-    NSLog(@"%@",categories);
+    [dbm insertCategoryWithUserID:user_id CategoryID:categoryCount CategoryName:items[index]];
+    [categoryIDs insertObject:@(categoryCount) atIndex:index];
 }
 
 - (IBAction)removeWorkbookCategory
@@ -236,11 +227,12 @@
     if (categoryCarousel.numberOfItems > 1)
     {
         NSInteger index = categoryCarousel.currentItemIndex;
-        [dbm removeCategoryWithUserID:user_id CategoryID:index];
+        NSInteger idx = [categoryIDs[index] intValue];
+        NSLog(@"%d",idx);
+        [dbm removeCategoryWithUserID:user_id CategoryID:idx];
         [items removeObjectAtIndex:index];
+        [categoryIDs removeObjectAtIndex:index];
         [categoryCarousel removeItemAtIndex:index animated:YES];
-        [categories removeAllObjects];
-        categories = [dbm getCategoryNamesWithUserID:user_id];
     }
 }
 
@@ -309,7 +301,7 @@
     //views outside of the `if (view == nil) {...}` check otherwise
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
-    label.text = categories[index];
+    label.text = items[index];
     [label setFont:[UIFont fontWithName:@"Helvetica" size:25]];
     
     return view;
