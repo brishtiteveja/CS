@@ -9,10 +9,17 @@
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
 #import "iCarousel.h"
+#import "DBManager.h"
 
 
 
 @interface iCarouselExampleViewController : UIViewController <iCarouselDataSource, iCarouselDelegate>
+{
+    NSMutableArray* items;
+    NSMutableArray* categories;
+    DBManager* dbm;
+    
+}
 
 @property (nonatomic, strong) IBOutlet iCarousel *categoryCarousel;
 @property (nonatomic, strong) IBOutlet iCarousel *pageCarousel;
@@ -21,6 +28,10 @@
 @property (nonatomic, strong) IBOutlet UINavigationItem *navItem;
 @property (nonatomic, strong) IBOutlet UIBarItem *orientationBarItem;
 @property (nonatomic, strong) IBOutlet UIBarItem *wrapBarItem;
+@property (nonatomic, strong) NSMutableArray *items;
+@property (nonatomic, retain) NSMutableArray * categories;
+@property (nonatomic, retain) DBManager* dbm;
+@property (nonatomic, assign) NSUInteger user_id;
 
 - (IBAction)switchPageCarouselType;
 - (IBAction)switchCategoryCarouselType;

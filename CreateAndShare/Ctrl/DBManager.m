@@ -41,12 +41,14 @@ static sqlite3_stmt *statement = nil;
     {
         const char *dbpath = [databasePath UTF8String];
         
-        NSLog(@"%@",databasePath);
+        NSLog(@"Database Path = %@",databasePath);
         if (sqlite3_open(dbpath, &database) == SQLITE_OK)
         {
             char *errMsg;
+            
+            //user table
             const char *sql_stmt =
-            "create table if not exists user (id integer primary key, name text, password text)";
+            "create table if not exists user (id integer primary key, name text unique, password text)";
             if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
                 != SQLITE_OK)
             {
@@ -54,8 +56,9 @@ static sqlite3_stmt *statement = nil;
                 NSLog(@"Failed to create table user.");
             }
             
+            //category table
             sql_stmt =
-            "create table if not exists category (id integer primary key,user_id integer, category_name text)";
+            "create table if not exists category (id integer primary key,user_id integer unique, category_id, category_name text)";
             if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
                 != SQLITE_OK)
             {
@@ -63,15 +66,26 @@ static sqlite3_stmt *statement = nil;
                 NSLog(@"Failed to create table category");
             }
             
+            //page table
+            sql_stmt =
+            "create table if not exists page (id integer primary key,user_id integer unique, category_id integer, page_id integer unique, page_name text)";
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to create table page");
+            }
+            
+//            //pagecontents table
 //            sql_stmt =
-//            "create table if not exists page (id integer primary key,user_id integer, category_name text)";
+//            "create table if not exists pagecontents (page_id integer )";
 //            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
 //                != SQLITE_OK)
 //            {
 //                isSuccess = NO;
-//                NSLog(@"Failed to create table category");
+//                NSLog(@"Failed to create table page");
 //            }
-//            
+            
             
             sqlite3_close(database);
             NSLog(@"Database successfully created.");
@@ -79,27 +93,62 @@ static sqlite3_stmt *statement = nil;
         }
         else {
             isSuccess = NO;
+            sqlite3_close(database);
             NSLog(@"Failed to open/create database");
         }
+    }else{
+        sqlite3_close(database);
+        NSLog(@"Database exists.");
     }
+    
     return isSuccess;
 }
 
--(BOOL)insertCategoryWithUserID:(NSUInteger) user_id CategoryName:(NSString*)category_name{
+-(BOOL)removeCategoryWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger)category_id{
+    
+    const char *dbpath = [databasePath UTF8String];
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        NSString *deleteSQL = [NSString stringWithFormat:@"delete from category where user_id=\"%d\" and category_id=\"%d\"", user_id,
+                               category_id];
+        const char *delete_stmt = [deleteSQL UTF8String];
+        sqlite3_prepare_v2(database, delete_stmt,-1, &statement, NULL);
+        if (sqlite3_step(statement) == SQLITE_DONE)
+        {
+            NSLog(@"Deletion from category table succeeded.");
+            sqlite3_close(database);
+            return YES;
+        }
+        else {
+            NSLog(@"Deletion from category table failed.");
+            sqlite3_close(database);
+            return NO;
+        }
+        sqlite3_reset(statement);
+    }
+    return NO;
+}
+
+-(BOOL)insertCategoryWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger)category_id CategoryName:(NSString *)category_name{
     const char *dbpath = [databasePath UTF8String];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK)
     {
         NSString *insertSQL = [NSString stringWithFormat:@"insert into \
-                               category (user_id,name, category_name) values \
-                               (\"%d\",\"%@\")",user_id,
+                               category (user_id, category_id, category_name) values \
+                               (\"%d\",\"%d\",\"%@\")", user_id, category_id,
                                category_name];
         const char *insert_stmt = [insertSQL UTF8String];
-        sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
+        sqlite3_prepare_v2(database, insert_stmt, -1, &statement, NULL);
         if (sqlite3_step(statement) == SQLITE_DONE)
         {
+            NSLog(@"Insertion to category table succeeded.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
             return YES;
         }
         else {
+            NSLog(@"Insertion to category table failed.");
+            sqlite3_close(database);
             return NO;
         }
         sqlite3_reset(statement);
@@ -121,9 +170,11 @@ static sqlite3_stmt *statement = nil;
         sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
         if (sqlite3_step(statement) == SQLITE_DONE)
         {
+            sqlite3_close(database);
             return YES;
         }
         else {
+            sqlite3_close(database);
             return NO;
         }
         sqlite3_reset(statement);
@@ -131,7 +182,7 @@ static sqlite3_stmt *statement = nil;
     return NO;
 }
 
-- (NSArray*) getCategoryNamesWithUserID:(NSUInteger) user_id
+- (NSMutableArray*) getCategoryNamesWithUserID:(NSUInteger) user_id
 {
     const char *dbpath = [databasePath UTF8String];
     if(sqlite3_open(dbpath, &database) == SQLITE_OK)
@@ -141,25 +192,83 @@ static sqlite3_stmt *statement = nil;
         const char *query_stmt = [querySQL UTF8String];
         NSMutableArray *resultArray = [[NSMutableArray alloc]init];
         
-        while(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
-            if(sqlite3_step(statement) == SQLITE_ROW){
-                NSString *category_name = [[NSString alloc] initWithUTF8String:
-                                           (const char *) sqlite3_column_text(statement, 1)];
+        if(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
+            while(sqlite3_step(statement) == SQLITE_ROW){
+//                NSLog(@"%s", sqlite3_column_text(statement, 0));
+                NSString *category_name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
                 [resultArray addObject:category_name];
-                
-                return resultArray;
             }
-            else{
-                NSLog(@"Not found.");
-                return nil;
-            }
+            
+            sqlite3_close(database);
+            return resultArray;
         }
         
         sqlite3_reset(statement);
     }
     return nil;
 }
-    
+
+-(NSInteger)getCategoryIDWithUserID:(NSUInteger) user_id CategoryName:(NSString*)category_name
+{
+    const char *dbpath = [databasePath UTF8String];
+    if(sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        NSString *querySQL = [NSString stringWithFormat:@"select id from category where \
+                              user_id=\"%d\" and category_name=\"%@\"", user_id,category_name];
+        const char *query_stmt = [querySQL UTF8String];
+        NSUInteger resultIndex = -1;
+        
+        if(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
+            if(sqlite3_step(statement) == SQLITE_ROW){
+                NSString* cat_ids = [NSString stringWithFormat:@"%s",sqlite3_column_text(statement, 0)];
+                resultIndex = [cat_ids intValue];
+//                NSLog(@"Category ID = %d", resultIndex);
+                
+                sqlite3_finalize(statement);
+                sqlite3_close(database);
+                return resultIndex;
+            }
+            else{
+                NSLog(@"Failed to get category ID.");
+                return -1;
+            }
+        }
+        
+        sqlite3_reset(statement);
+    }
+    return -1;
+}
+//- (NSMutableArray*) getCategoryNameWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger) category_id
+//{
+//    const char *dbpath = [databasePath UTF8String];
+//    if(sqlite3_open(dbpath, &database) == SQLITE_OK)
+//    {
+//        NSString *querySQL = [NSString stringWithFormat:@"select category_name from category where \
+//                              user_id=\"%d\" and category_id=\"%d\"", user_id, category_id];
+//        const char *query_stmt = [querySQL UTF8String];
+//        NSMutableArray *resultArray = [[NSMutableArray alloc]init];
+//        
+//        if(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
+//            if(sqlite3_step(statement) == SQLITE_ROW){
+//                NSString *category_name = [[NSString alloc] initWithUTF8String:
+//                                           (const char *) sqlite3_column_text(statement, 1)];
+//                [resultArray addObject:category_name];
+//                
+//                return resultArray;
+//            }
+//            else{
+//                NSLog(@"Database step error.");
+//                return nil;
+//            }
+//        }else{
+//            
+//        }
+//        
+//        sqlite3_reset(statement);
+//    }
+//    return nil;
+//}
+
 - (NSArray*) findByRegisterNumber:(NSString*)registerNumber
 {
         const char *dbpath = [databasePath UTF8String];
@@ -184,10 +293,12 @@ static sqlite3_stmt *statement = nil;
                     NSString *year = [[NSString alloc]initWithUTF8String:
                                           (const char *) sqlite3_column_text(statement, 2)];
                     [resultArray addObject:year];
-                        return resultArray;
+                    sqlite3_close(database);
+                    return resultArray;
                 }
                 else{
                     NSLog(@"Not found");
+                    sqlite3_close(database);
                     return nil;
                 }
                 sqlite3_reset(statement);

@@ -9,13 +9,11 @@
 #import "iCarouselExampleViewController.h"
 #import "CoreHolder.h"
 #import "AppDelegate.h"
-#import "DBManager.h"
+
 
 @interface iCarouselExampleViewController () <UIActionSheetDelegate>
 
 @property (nonatomic, assign) BOOL wrap;
-@property (nonatomic, strong) NSMutableArray *items;
-
 @end
 
 
@@ -29,17 +27,31 @@
 @synthesize orientationBarItem;
 @synthesize wrapBarItem;
 @synthesize wrap;
+@synthesize user_id;
 @synthesize items;
+@synthesize categories;
+@synthesize dbm;
 
 - (void)setUp
 {
     //set up data
     wrap = YES;
     self.items = [NSMutableArray array];
-    for (int i = 0; i < 1000; i++)
+    
+    //Get category name from the database
+    user_id = 1;
+
+    
+    //Database manager instance
+    dbm = [DBManager getSharedInstance];
+    
+    categories = [dbm getCategoryNamesWithUserID:user_id];
+    
+    for (int i = 0; i < [categories count]; i++)
     {
         [items addObject:@(i)];
     }
+    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -68,6 +80,10 @@
     categoryCarousel.dataSource = nil;
     pageCarousel.delegate = nil;
     pageCarousel.dataSource = nil;
+    [categories release];
+    [items release];
+    [dbm release];
+    [super dealloc];
     
 }
 
@@ -118,9 +134,63 @@
                                         destructiveButtonTitle:nil
                                              otherButtonTitles:@"Linear", @"Rotary", @"Inverted Rotary", @"Cylinder", @"Inverted Cylinder", @"Wheel", @"Inverted Wheel", @"CoverFlow", @"CoverFlow2", @"Time Machine", @"Inverted Time Machine", @"Custom", nil];
     
+    
     pageTypeChanged = true;
     [sheet showInView:self.view];
 }
+
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    
+//    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
+//    if (cell == nil) {
+//        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+//                                       reuseIdentifier:kCellIdentifier] autorelease];
+//        cell.accessoryType = UITableViewCellAccessoryNone;
+//        
+//        if ([indexPath section] == 0) {
+//            UITextField *playerTextField = [[UITextField alloc] initWithFrame:CGRectMake(110, 10, 185, 30)];
+//            playerTextField.adjustsFontSizeToFitWidth = YES;
+//            playerTextField.textColor = [UIColor blackColor];
+//            if ([indexPath row] == 0) {
+//                playerTextField.placeholder = @"example@gmail.com";
+//                playerTextField.keyboardType = UIKeyboardTypeEmailAddress;
+//                playerTextField.returnKeyType = UIReturnKeyNext;
+//            }
+//            else {
+//                playerTextField.placeholder = @"Required";
+//                playerTextField.keyboardType = UIKeyboardTypeDefault;
+//                playerTextField.returnKeyType = UIReturnKeyDone;
+//                playerTextField.secureTextEntry = YES;
+//            }
+//            playerTextField.backgroundColor = [UIColor whiteColor];
+//            playerTextField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
+//            playerTextField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
+//            playerTextField.textAlignment = UITextAlignmentLeft;
+//            playerTextField.tag = 0;
+//            //playerTextField.delegate = self;
+//            
+//            playerTextField.clearButtonMode = UITextFieldViewModeNever; // no clear 'x' button to the right
+//            [playerTextField setEnabled: YES];
+//            
+//            [cell.contentView addSubview:playerTextField];
+//            
+//            [playerTextField release];
+//        }
+//    }
+//    if ([indexPath section] == 0) { // Email & Password Section
+//        if ([indexPath row] == 0) { // Email
+//            cell.textLabel.text = @"Email";
+//        }
+//        else {
+//            cell.textLabel.text = @"Password";
+//        }
+//    }
+//    else { // Login button section
+//        cell.textLabel.text = @"Log in";
+//    }
+//    return cell;
+//}
+
 
 - (IBAction)toggleOrientation
 {
@@ -144,17 +214,33 @@
 - (IBAction)insertWorkbookCategory
 {
     NSInteger index = MAX(0, categoryCarousel.currentItemIndex);
+    NSLog(@"cur_idx=%d",index);
+    NSString* category = categories[index];
+    NSLog(@"cur_name=%@",category);
+    NSInteger lastIndex = categoryCarousel.numberOfItems - 1;
+    
     [items insertObject:@(categoryCarousel.numberOfItems) atIndex:index];
     [categoryCarousel insertItemAtIndex:index animated:YES];
+    [dbm insertCategoryWithUserID:user_id CategoryName:category];
+    [categories removeAllObjects];
+    categories = [dbm getCategoryNamesWithUserID:user_id];
+    NSInteger idx = [categories count] - 1;
+    NSString* obj = categories[idx];
+    [categories removeObjectAtIndex:idx];
+    [categories insertObject:category atIndex:index];
+    NSLog(@"%@",categories);
 }
 
 - (IBAction)removeWorkbookCategory
 {
-    if (categoryCarousel.numberOfItems > 0)
+    if (categoryCarousel.numberOfItems > 1)
     {
         NSInteger index = categoryCarousel.currentItemIndex;
+        [dbm removeCategoryWithUserID:user_id CategoryID:index];
         [items removeObjectAtIndex:index];
         [categoryCarousel removeItemAtIndex:index animated:YES];
+        [categories removeAllObjects];
+        categories = [dbm getCategoryNamesWithUserID:user_id];
     }
 }
 
@@ -218,16 +304,13 @@
         label = (UILabel *)[view viewWithTag:1];
     }
     
-    //Get category name from the database
-    
-    
-    
     //set item label
     //remember to always set any properties of your carousel item
     //views outside of the `if (view == nil) {...}` check otherwise
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
-    label.text = [items[index] stringValue];
+    label.text = categories[index];
+    [label setFont:[UIFont fontWithName:@"Helvetica" size:25]];
     
     return view;
 }
