@@ -272,7 +272,7 @@
         curPersonMetaData = [diaryMetaData objectForKey:currentPerson];
     }
 
-//    [self switchToAppState:kAppStateStartscreenShowing usingParameters:nil andPageTurn:0];
+    [self switchToAppState:kAppStateStartscreenShowing usingParameters:nil andPageTurn:0];
 }
 
 - (void)enterCurrentPersonsDiary {

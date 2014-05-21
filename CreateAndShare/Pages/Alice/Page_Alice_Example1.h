@@ -28,42 +28,32 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-//  Diaries_Alice.h
+//  Page_Alice_Example2.h
 //  iDiary2
 //
-//  Created by Markus Konrad on 06.06.12
-//  Copyright 2012 INKA Forschungsgruppe. All rights reserved.
+//  Created by Markus Konrad on 13.06.12.
+//  Copyright (c) 2012 INKA Forschungsgruppe. All rights reserved.
 //
 
-// These Arrays define the pages
-static NSArray *diaryAlice = [[NSArray arrayWithObjects:
-    @"Intro",            // 0
-    @"Example1",
-    @"Example2",         // 1
-    @"Example3",         // 2
-    @"Example4",         // 3
-    @"Example5",         // 4
-//    @"Example6",         // 5
-    @"Example7",         // 6
-    @"Example8",         // 7
-    @"Example9",         // 7
-    nil] retain];
-   
-// This dictionary associates the diary-arrays with the persons
-static NSDictionary *diaryPages = [[NSDictionary dictionaryWithObjectsAndKeys:
-    diaryAlice, @"Alice",
-    nil] retain];
+#import "PageLayer.h"
 
-// These Arrays define meta data for diaries, such as the position of the diary in the startscreen, page offset, anim corner size
-static NSArray *metaDataAlice = [[NSArray arrayWithObjects:
-    [NSValue valueWithCGPoint:ccp(395, 768-417)],       // position of the diary in the startscreen
-    [NSValue valueWithCGPoint:ccp(-1.5, 0)],            // page offset
-    [NSValue valueWithCGSize:CGSizeMake(242, 200)],     // page corner animation size
-    [NSValue valueWithCGPoint:ccp(-1, 1)],              // page corner offset
-    [NSValue valueWithCGPoint:ccp(0, 0)],       // disclamer coordinates
-    nil] retain];
+#import "MagicLayer.h"
+#import "Node3D.h"
 
-// This dictionary associates the diary-metadata-arrays with the persons    
-static NSDictionary *diaryMetaData = [[NSDictionary dictionaryWithObjectsAndKeys:
-    metaDataAlice, @"Alice",
-    nil] retain];
+@interface Page_Alice_Example1 : PageLayer {
+    MagicLayer *spriteMask;
+    CCNode* lineDrawerNode;
+    CGRect priceRect;
+    
+    Node3D *labelNode;
+    BOOL labelFlipAnimRunning;   // saves status for each label if the flip animation is running
+    BOOL labelBackSideShowing;   // is YES when the back side of a label is showing
+    
+    int swoshSndId;             // swosh sound id
+    
+    float dangleAngle;       // angle for dangling
+    int dangleRepeatNum;     // how often the animation has been started
+    
+}
+
+@end
