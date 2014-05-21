@@ -100,6 +100,18 @@ typedef struct _LineVertex {
         [renderTexture clear:1.0f g:1.0f b:1.0f a:1.0f];
         [self addChild:renderTexture];
         
+        //create button
+        CCLabelTTF* startRecord = [CCLabelTTF labelWithString:@"startRecord" fontName:@"Arial" fontSize:32.0];
+        startRecord.dimensions = CGSizeMake(320, 50);
+        
+//                                                     dimension:CGSizeMake(320, 50)
+//                                                     alignment:UITextAlignmentCenter
+//                                                     fontName:@"Arial"
+//                                                     fontSize:32.0] retain];
+        startRecord.position = ccp(width,height);
+        [self addChild:startRecord];
+        
+        
         self.isTouchEnabled = YES;
         
         UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
