@@ -39,6 +39,7 @@
 
 #import "MagicLayer.h"
 #import "Node3D.h"
+#import "ERViewController.h"
 
 @interface Page_Alice_Example1 : PageLayer {
     MagicLayer *spriteMask;
@@ -54,6 +55,7 @@
     float dangleAngle;       // angle for dangling
     int dangleRepeatNum;     // how often the animation has been started
     
+    ERViewController* ERCtrl;
 }
 
 @end

@@ -5,13 +5,15 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>CA3E79E8-E60D-4E21-BCC7-5D4FE6C87D72</string>
+	<string>08E18CC0-0D01-4254-A6F0-9367DC5EC19C</string>
 	<key>IDESourceControlProjectName</key>
 	<string>CreateAndShare</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>34912C7A-50F0-4AA5-8F3B-BE27A9C683C8</key>
 		<string>ssh://git.gree-dev.net/abdullahkhan-zehady/CreateAndShare.git</string>
+		<key>92B4D87C-498A-401C-B4C8-385E33BB8867</key>
+		<string>https://github.com/Everyplay/everyplay-ios-sdk.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>CreateAndShare.xcodeproj/project.xcworkspace</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>34912C7A-50F0-4AA5-8F3B-BE27A9C683C8</key>
 		<string>../..</string>
+		<key>92B4D87C-498A-401C-B4C8-385E33BB8867</key>
+		<string>../../CreateAndShare/libs/everyplay-ios-sdk</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://git.gree-dev.net/abdullahkhan-zehady/CreateAndShare.git</string>
@@ -35,6 +39,14 @@
 			<string>34912C7A-50F0-4AA5-8F3B-BE27A9C683C8</string>
 			<key>IDESourceControlWCCName</key>
 			<string>CreateAndShare</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>92B4D87C-498A-401C-B4C8-385E33BB8867</string>
+			<key>IDESourceControlWCCName</key>
+			<string>everyplay-ios-sdk</string>
 		</dict>
 	</array>
 </dict>

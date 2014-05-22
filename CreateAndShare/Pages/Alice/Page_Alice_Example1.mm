@@ -98,15 +98,20 @@ static const float kLabelFlipAnimDur = 0.5f;
 - (void)dealloc {
     [spriteMask release];
     [labelNode release];
+    [ERCtrl.view removeFromSuperview];
     
+    [ERCtrl dealloc];
     [super dealloc];
 }
 
 - (void)displayContent {
     [self addChild:lineDrawerNode];
     
+    ERCtrl = [[ERViewController alloc] init];
+    [[[CCDirector sharedDirector] view] addSubview:ERCtrl.view];
     //[super displayContent];
 }
+
 
 - (void)loadPageContents {
 //    // set individual properties

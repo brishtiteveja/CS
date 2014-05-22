@@ -47,8 +47,11 @@
     dbm = [DBManager getSharedInstance];
     
     items = [dbm getCategoryNamesWithUserID:user_id];
-    categoryCount = [dbm getMaxCategoryNumber];
-    
+    if([items count] != 0)
+        categoryCount = [dbm getMaxCategoryNumber];
+    else
+        categoryCount = 0;
+        
     categoryIDs = [dbm getCategoryIDsWithUserID:user_id];
     NSLog(@"%@",categoryIDs);
 }

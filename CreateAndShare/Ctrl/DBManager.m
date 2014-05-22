@@ -58,17 +58,61 @@ static sqlite3_stmt *statement = nil;
             
             //category table
             sql_stmt =
-            "create table if not exists category (id integer primary key,user_id integer unique, category_id, category_name text)";
+            "create table if not exists category (id integer primary key,user_id integer, category_id integer unique, category_name text)";
             if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
                 != SQLITE_OK)
             {
                 isSuccess = NO;
                 NSLog(@"Failed to create table category");
             }
+  
+            //Inserting some initial categories.
+            
+            NSString *tmp = [NSString stringWithFormat:@"insert into category (user_id, category_id, category_name) values (\"%d\",\"%d\",\"%@\")", 1, 1, @"memories"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into table category");
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into category (user_id, category_id, category_name) values (\"%d\",\"%d\",\"%@\")", 1, 2, @"journal"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into table category");
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into category (user_id, category_id, category_name) values (\"%d\",\"%d\",\"%@\")", 1, 3, @"reading"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into table category");
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            
+            
             
             //page table
             sql_stmt =
-            "create table if not exists page (id integer primary key,user_id integer unique, category_id integer, page_id integer unique, page_name text)";
+            "create table if not exists page (id integer primary key,user_id integer, category_id integer, page_id integer, page_name text)";
             if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
                 != SQLITE_OK)
             {

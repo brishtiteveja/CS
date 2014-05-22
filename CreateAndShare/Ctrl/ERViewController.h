@@ -18,6 +18,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "ERConfig.h"
+#import "cocos2d.h"
 
 #if USE_EVERYPLAY
 #import <Everyplay/Everyplay.h>
@@ -39,22 +40,7 @@
 #endif
 
 @interface ERViewController : UIViewController EP_DELEGATE {
-    EAGLContext *context;
-    GLuint program;
-
-    BOOL animating;
-    NSInteger animationFrameInterval;
-    CADisplayLink *__unsafe_unretained displayLink;
-
-    NSTimer *timer;
-
     BOOL recordingPermissionGranted;
 }
-
-@property (readonly, nonatomic, getter=isAnimating) BOOL animating;
-@property (nonatomic) NSInteger animationFrameInterval;
-
-- (void)startAnimation;
-- (void)stopAnimation;
 
 @end

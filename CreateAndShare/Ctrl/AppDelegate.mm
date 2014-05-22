@@ -43,7 +43,8 @@
 #import "CoreHolder.h"
 #import "Makros.h"
 #import "DBManager.h"
-
+#import "Everyplay/Everyplay.h"
+#import "ERConfig.h"
 
 #ifdef DIARY_LAUNCHER
 #import "LauncherLayer.h"
@@ -157,7 +158,7 @@
 //    navController_ = [[UINavigationController alloc] initWithRootViewController:director];
 //    navController_.navigationBarHidden = YES;
     
-    iCarouselExampleViewController* categoryViewController = [[iCarouselExampleViewController alloc] initWithNibName:nil bundle:nil];
+    categoryViewController = [[iCarouselExampleViewController alloc] initWithNibName:nil bundle:nil];
     
     
 	// make the View Controller a child of the main window
@@ -182,7 +183,8 @@
     // startup
     //CoreHolder *core = [CoreHolder sharedCoreHolder];
     //[core firstStart];
-
+    
+    
 }
 
 
@@ -204,9 +206,15 @@
 #endif
 
 
-
 - (void)applicationWillResignActive:(UIApplication *)application {
+
+#if USE_EVERYPLAY && TEST_MANUAL_PAUSE_RESUME
+    EveryplayLog(@"Doing in-app pause");
+    [[[Everyplay sharedInstance] capture] pauseRecording];
+#endif
+
 	[[CCDirector sharedDirector] pause];
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
