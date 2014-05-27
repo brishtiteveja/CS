@@ -15,22 +15,33 @@
 
 @interface iCarouselExampleViewController : UIViewController <iCarouselDataSource, iCarouselDelegate>
 {
-    NSMutableArray* items;
+    NSMutableArray* categoryItems;
+    NSMutableArray* pageItems;
     NSMutableArray* categoryIDs;
+    NSMutableArray* pageIDs;
+    NSInteger categoryCarouselType;
+    NSInteger pageCarouselType;
+    NSInteger categoryCount;
+    NSInteger pageCount;
     DBManager* dbm;
     
 }
 
 @property (nonatomic, strong) IBOutlet iCarousel *categoryCarousel;
 @property (nonatomic, strong) IBOutlet iCarousel *pageCarousel;
+@property (readonly) NSInteger categoryCarouselType;
+@property (readonly) NSInteger pageCarouselType;
 @property (readonly) BOOL categoryTypeChanged;
 @property (readonly) BOOL pageTypeChanged;
 @property (nonatomic, strong) IBOutlet UINavigationItem *navItem;
 @property (nonatomic, strong) IBOutlet UIBarItem *orientationBarItem;
 @property (nonatomic, strong) IBOutlet UIBarItem *wrapBarItem;
-@property (nonatomic, strong) NSMutableArray *items;
-@property (nonatomic, retain) NSMutableArray * categoryIDs;
+@property (nonatomic, strong) NSMutableArray *categoryItems;
+@property (nonatomic, strong) NSMutableArray *pageItems;
+@property (nonatomic, retain) NSMutableArray *categoryIDs;
+@property (nonatomic, retain) NSMutableArray *pageIDs;
 @property (nonatomic, assign) NSInteger categoryCount;
+@property (nonatomic, assign) NSInteger pageCount;
 @property (nonatomic, retain) DBManager* dbm;
 @property (nonatomic, assign) NSUInteger user_id;
 
@@ -40,5 +51,7 @@
 - (IBAction)toggleWrap;
 - (IBAction)insertWorkbookCategory;
 - (IBAction)removeWorkbookCategory;
+- (IBAction)insertPageIntoCategory;
+- (IBAction)removePageFromCategory;
 
 @end

@@ -176,7 +176,7 @@
 	[CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];
 
     DBManager* dbm = [DBManager getSharedInstance];
-	[dbm createDB];
+	//[dbm createDB];
 	// Removes the startup flicker
 	//
     //[self removeStartupFlicker];

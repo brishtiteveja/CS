@@ -74,9 +74,6 @@ FMOD::Channel *channel;
 
 - (void)dealloc
 {
-    channel-> stop();
-    sound1 -> release();
-    fmod_system -> release();
     [super dealloc];
 }
 
@@ -94,7 +91,7 @@ FMOD::Channel *channel;
     
     [Everyplay initWithDelegate:self andParentViewController:self];
 
-    // [Everyplay sharedInstance].flowControl = EveryplayFlowReturnsToVideoPlayer;
+    //[Everyplay sharedInstance].flowControl = EveryplayFlowReturnsToVideoPlayer;
 
     _song1 = [NSString stringWithFormat:@"%@/loop.wav", [[NSBundle mainBundle] resourcePath]];
     _song2 = [NSString stringWithFormat:@"%@/loop2.wav", [[NSBundle mainBundle] resourcePath]];
@@ -147,6 +144,7 @@ FMOD::Channel *channel;
 
 - (void)viewDidUnload
 {
+    NSLog(@"ERview unloaded.");
     [super viewDidUnload];
   
 }
@@ -154,6 +152,13 @@ FMOD::Channel *channel;
 - (void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+}
+
+- (void) viewWillDisappear:(BOOL)animated{
+    channel-> stop();
+    sound1 -> release();
+    fmod_system -> release();
+    NSLog(@"Drawing view disappeared. Sound stopped.");
 }
 
 

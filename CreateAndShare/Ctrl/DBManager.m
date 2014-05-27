@@ -112,13 +112,174 @@ static sqlite3_stmt *statement = nil;
             
             //page table
             sql_stmt =
-            "create table if not exists page (id integer primary key,user_id integer, category_id integer, page_id integer, page_name text)";
+            "create table if not exists page (id integer primary key,user_id integer, category_id integer, page_id integer, page_name text, page_img_url text)";
             if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
                 != SQLITE_OK)
             {
                 isSuccess = NO;
                 NSLog(@"Failed to create table page");
+            }else{
+                NSLog(@"Page table successfully created.");
             }
+            
+            //inserting some initial pages
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 1, 1, @"cat"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 1);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            //inserting some initial pages
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 1, 2, @"dog"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 1);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 2, 1, @"rose"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 2);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 2, 2, @"belly"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 2);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 2, 3, @"sunflower"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 2);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 3, 1, @"dhaka"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 3);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 3, 2, @"rangpur"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 3);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 3, 3, @"rajshahi"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 3);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 4, 1, @"rice"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 4);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 4, 2, @"milk"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 4);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 4, 3, @"sweet"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 4);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+            
+            tmp = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name) values (\"%d\",\"%d\",\"%d\",\"%@\")", 1, 4, 4, @"honey"];
+            
+            sql_stmt = [tmp cStringUsingEncoding:NSASCIIStringEncoding];
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg)
+                != SQLITE_OK)
+            {
+                isSuccess = NO;
+                NSLog(@"Failed to insert into page for category id = %d", 4);
+            }else{
+                NSLog(@"Successful insertion.");
+            }
+
             
 //            //pagecontents table
 //            sql_stmt =
@@ -130,13 +291,14 @@ static sqlite3_stmt *statement = nil;
 //                NSLog(@"Failed to create table page");
 //            }
             
-            
+            sqlite3_finalize(statement);
             sqlite3_close(database);
             NSLog(@"Database successfully created.");
             return  isSuccess;
         }
         else {
             isSuccess = NO;
+            sqlite3_finalize(statement);
             sqlite3_close(database);
             NSLog(@"Failed to open/create database");
         }
@@ -146,6 +308,35 @@ static sqlite3_stmt *statement = nil;
     }
     
     return isSuccess;
+}
+
+-(NSInteger) getMaxPageNumberWithCategoryID:(NSInteger)category_id{
+    const char *dbpath = [databasePath UTF8String];
+    if(sqlite3_open(dbpath, &database) == SQLITE_OK){
+        NSString *maxSQL = [NSString stringWithFormat:@"select max(page_id) from page where category_id=\"%d\"",category_id];
+        const char *max_stmt = [maxSQL UTF8String];
+        sqlite3_prepare_v2(database, max_stmt, -1, &statement, NULL);
+        //        NSLog(@"%d",sqlite3_step(statement));
+        
+        
+        if (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            NSString *maxs = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+            NSLog(@"Max page extraction for the category succeeded.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return [maxs intValue];
+        }
+        else{
+            NSLog(@"Max page extraction for the category failed.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return 0;
+        }
+        
+        sqlite3_reset(statement);
+    }
+    return 0;
 }
 
 -(NSInteger) getMaxCategoryNumber
@@ -170,12 +361,12 @@ static sqlite3_stmt *statement = nil;
             NSLog(@"Max extraction failed.");
             sqlite3_finalize(statement);
             sqlite3_close(database);
-            return NO;
+            return 0;
         }
 
         sqlite3_reset(statement);
     }
-    return NO;
+    return 0;
 }
 
 -(BOOL)removeCategoryWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger)category_id{
@@ -228,6 +419,33 @@ static sqlite3_stmt *statement = nil;
     return NO;
 }
 
+
+-(BOOL)insertPageIntoCategoryWithUserID:(NSInteger)user_id CategoryID:(NSInteger)category_id PageID:(NSInteger)page_id PageName:(NSString *)page_name PageImageURL:(NSString *)page_img_url
+{
+    const char *dbpath = [databasePath UTF8String];
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        NSString *insertSQL = [NSString stringWithFormat:@"insert into page (user_id, category_id, page_id, page_name, page_img_url) values (\"%d\",\"%d\", \"%d\", \"%@\", \"%@\")", user_id, category_id, page_id, page_name, page_img_url];
+        const char *insert_stmt = [insertSQL UTF8String];
+        sqlite3_prepare_v2(database, insert_stmt, -1, &statement, NULL);
+        if (sqlite3_step(statement) == SQLITE_DONE)
+        {
+            NSLog(@"Page insertion with category id: \"%d\" succeeded.", category_id);
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return YES;
+        }
+        else {
+            NSLog(@"Page insertion with category id: \"%d\" failed.", category_id);
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return NO;
+        }
+        sqlite3_reset(statement);
+    }
+    return NO;
+}
+
 - (BOOL) saveData:(NSString*)registerNumber name:(NSString*)name
        department:(NSString*)department year:(NSString*)year;
 {
@@ -254,7 +472,7 @@ static sqlite3_stmt *statement = nil;
     return NO;
 }
 
-- (NSMutableArray*) getCategoryNamesWithUserID:(NSUInteger) user_id
+- (NSMutableArray *) getCategoryNamesWithUserID:(NSUInteger) user_id
 {
     const char *dbpath = [databasePath UTF8String];
     if(sqlite3_open(dbpath, &database) == SQLITE_OK)
@@ -270,15 +488,109 @@ static sqlite3_stmt *statement = nil;
                 NSString *category_name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
                 [resultArray addObject:category_name];
             }
-            
+            NSLog(@"Got category names.");
+            sqlite3_finalize(statement);
             sqlite3_close(database);
             return resultArray;
+        }else{
+            NSLog(@"Failed to get category names.");
         }
         
         sqlite3_reset(statement);
     }
     return nil;
 }
+
+-(NSMutableArray*) getCategoryNameWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger) category_id{
+    const char *dbpath = [databasePath UTF8String];
+    if(sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        NSString *querySQL = [NSString stringWithFormat:@"select category_name from category where \
+                              user_id=\"%d\" and category_id=\"%d\"", user_id,category_id];
+        const char *query_stmt = [querySQL UTF8String];
+        NSMutableArray *resultArray = [[NSMutableArray alloc]init];
+        
+        if(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
+            while(sqlite3_step(statement) == SQLITE_ROW){
+                //                NSLog(@"%s", sqlite3_column_text(statement, 0));
+                NSString *category_name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                [resultArray addObject:category_name];
+            }
+            NSLog(@"Got category name.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return resultArray;
+        }else{
+            NSLog(@"Failed to get category name.");
+        }
+        
+        sqlite3_reset(statement);
+    }
+    return nil;
+}
+
+-(NSMutableArray*) getPageNameWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger) category_id PageID:(NSUInteger)page_id
+{
+    const char *dbpath = [databasePath UTF8String];
+    if(sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        NSString *querySQL = [NSString stringWithFormat:@"select page_name from page where \
+                              user_id=\"%d\" and category_id=\"%d\" and page_id=\"%d\"", user_id, category_id, page_id];
+        const char *query_stmt = [querySQL UTF8String];
+        NSMutableArray *resultArray = [[NSMutableArray alloc]init];
+        
+        if(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
+            while(sqlite3_step(statement) == SQLITE_ROW){
+                //                NSLog(@"%s", sqlite3_column_text(statement, 0));
+                NSString *category_name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                [resultArray addObject:category_name];
+            }
+            NSLog(@"Got page name.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return resultArray;
+        }else{
+            NSLog(@"Failed to get page name.");
+        }
+        
+        sqlite3_reset(statement);
+    }
+    return nil;
+    
+}
+
+- (NSMutableArray *)getPageNamesWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger) category_id
+{
+    const char *dbpath = [databasePath UTF8String];
+    if(sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        NSString *querySQL = [NSString stringWithFormat:@"select page_name from page where \
+                              user_id=\"%d\" and category_id=\"%d\"", user_id,category_id];
+        const char *query_stmt = [querySQL UTF8String];
+        NSMutableArray *resultArray = [[NSMutableArray alloc]init];
+        
+        if(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
+            while(sqlite3_step(statement) == SQLITE_ROW){
+                //                NSLog(@"%s", sqlite3_column_text(statement, 0));
+                NSString *category_name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                [resultArray addObject:category_name];
+            }
+            NSLog(@"Got page names.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return resultArray;
+        }
+        else{
+            NSLog(@"Failed to get page names.");
+        }
+        
+        sqlite3_reset(statement);
+    }
+    return nil;
+}
+
+
+
 
 - (NSMutableArray*) getCategoryIDsWithUserID:(NSUInteger) user_id
 {
@@ -296,7 +608,35 @@ static sqlite3_stmt *statement = nil;
                 NSString *category_name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
                 [resultArray addObject:category_name];
             }
-            
+            NSLog(@"Got category ids.");
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return resultArray;
+        }
+        
+        sqlite3_reset(statement);
+    }
+    return nil;
+}
+
+- (NSMutableArray*) getPageIDsWithUserID:(NSUInteger) user_id CategoryID:(NSUInteger) category_id
+{
+    const char *dbpath = [databasePath UTF8String];
+    if(sqlite3_open(dbpath, &database) == SQLITE_OK)
+    {
+        NSString *querySQL = [NSString stringWithFormat:@"select page_id from page where \
+                              user_id=\"%d\" and category_id=\"%d\"", user_id,category_id];
+        const char *query_stmt = [querySQL UTF8String];
+        NSMutableArray *resultArray = [[NSMutableArray alloc]init];
+        
+        if(sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK){
+            while(sqlite3_step(statement) == SQLITE_ROW){
+                //                NSLog(@"%s", sqlite3_column_text(statement, 0));
+                NSString *category_name = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                [resultArray addObject:category_name];
+            }
+            sqlite3_finalize(statement);
+            NSLog(@"Got page ids.");
             sqlite3_close(database);
             return resultArray;
         }

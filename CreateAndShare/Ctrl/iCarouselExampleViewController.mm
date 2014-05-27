@@ -21,6 +21,8 @@
 
 @synthesize categoryCarousel;
 @synthesize pageCarousel;
+@synthesize categoryCarouselType;
+@synthesize pageCarouselType;
 @synthesize categoryTypeChanged;
 @synthesize pageTypeChanged;
 @synthesize navItem;
@@ -28,32 +30,57 @@
 @synthesize wrapBarItem;
 @synthesize wrap;
 @synthesize user_id;
-@synthesize items;
+@synthesize categoryItems;
+@synthesize pageItems;
 @synthesize categoryIDs;
+@synthesize pageIDs;
 @synthesize categoryCount;
+@synthesize pageCount;
 @synthesize dbm;
+
+- (void)getCategoryItems
+{
+    categoryItems = [dbm getCategoryNamesWithUserID: user_id];
+    if([categoryItems count] != 0)
+        categoryCount = [dbm getMaxCategoryNumber];
+    else
+        categoryCount = 0;
+    
+    categoryIDs = [dbm getCategoryIDsWithUserID: user_id];
+    NSLog(@"Category IDs: %@", categoryIDs);
+}
+
+- (void)getPageITems:(NSUInteger)category_id
+{
+    pageItems = [dbm getPageNamesWithUserID: user_id CategoryID: category_id];
+    if([pageItems count] != 0){
+        pageCount = [dbm getMaxPageNumberWithCategoryID: category_id];
+    }else{
+        pageCount = 0;
+    }
+    pageIDs = [dbm getPageIDsWithUserID: user_id CategoryID: category_id];
+    NSLog(@"Page IDs: %@", pageIDs);
+}
 
 - (void)setUp
 {
     //set up data
     wrap = YES;
-    self.items = [NSMutableArray array];
+    self.categoryItems = [NSMutableArray array];
+    self.pageItems = [NSMutableArray array];
     
-    //Get category name from the database
+    //set the user id
     user_id = 1;
 
     
     //Database manager instance
     dbm = [DBManager getSharedInstance];
     
-    items = [dbm getCategoryNamesWithUserID:user_id];
-    if([items count] != 0)
-        categoryCount = [dbm getMaxCategoryNumber];
-    else
-        categoryCount = 0;
-        
-    categoryIDs = [dbm getCategoryIDsWithUserID:user_id];
-    NSLog(@"%@",categoryIDs);
+    [self getCategoryItems];
+    
+    NSInteger category_id = categoryCarousel.currentItemIndex + 1;//[categoryIDs[0] intValue];
+
+    [self getPageITems:category_id];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -83,7 +110,7 @@
     pageCarousel.delegate = nil;
     pageCarousel.dataSource = nil;
     [categoryIDs release];
-    [items release];
+    [categoryItems release];
     [dbm release];
     [super dealloc];
     
@@ -96,11 +123,16 @@
 {
     [super viewDidLoad];
     
+    //set carousel type
+    categoryCarouselType = iCarouselTypeWheel;
+    pageCarouselType = iCarouselTypeInvertedTimeMachine;
+    
     //configure carousel
-    categoryCarousel.type = iCarouselTypeWheel;      
-    pageCarousel.type = iCarouselTypeInvertedTimeMachine;
+    categoryCarousel.type = categoryCarouselType;
+    pageCarousel.type = pageCarouselType;
 //    navItem.title = @"CoverFlow2";
 }
+
 
 - (void)viewDidUnload
 {
@@ -213,15 +245,32 @@
     [categoryCarousel reloadData];
 }
 
+- (IBAction)insertPageIntoCategory
+{
+    NSInteger index = MAX(0, pageCarousel.currentItemIndex);
+    NSInteger category_id = [[categoryIDs objectAtIndex:categoryCarousel.currentItemIndex] intValue];
+    //NSLog(@"%d",category_id);
+    
+    NSInteger page_id = [dbm getMaxPageNumberWithCategoryID:category_id] + 1;
+    [pageCarousel insertItemAtIndex:index animated:YES];
+    [dbm insertPageIntoCategoryWithUserID:user_id CategoryID:category_id PageID:page_id PageName:@"page" PageImageURL:@""];
+    [pageIDs insertObject:@(page_id) atIndex:index];
+}
+- (IBAction)removePageFromCategory
+{
+    
+}
+
+
 - (IBAction)insertWorkbookCategory
 {
     NSInteger index = MAX(0, categoryCarousel.currentItemIndex);
     
-    categoryCount++;
+    categoryCount = [dbm getMaxCategoryNumber] + 1;
     
-    [items insertObject:items[index] atIndex:index];
+    [categoryItems insertObject:categoryItems[index] atIndex:index];
     [categoryCarousel insertItemAtIndex:index animated:YES];
-    [dbm insertCategoryWithUserID:user_id CategoryID:categoryCount CategoryName:items[index]];
+    [dbm insertCategoryWithUserID:user_id CategoryID:categoryCount CategoryName:categoryItems[index]];
     [categoryIDs insertObject:@(categoryCount) atIndex:index];
 }
 
@@ -233,7 +282,7 @@
         NSInteger idx = [categoryIDs[index] intValue];
         NSLog(@"%d",idx);
         [dbm removeCategoryWithUserID:user_id CategoryID:idx];
-        [items removeObjectAtIndex:index];
+        [categoryItems removeObjectAtIndex:index];
         [categoryIDs removeObjectAtIndex:index];
         [categoryCarousel removeItemAtIndex:index animated:YES];
     }
@@ -273,39 +322,75 @@
 
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    return [items count];
+    if(carousel.type == categoryCarouselType)
+        return [categoryItems count];
+    else
+        return [pageItems count];
 }
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
     UILabel *label = nil;
-    
-    //create new view if no view is available for recycling
-    if (view == nil)
-    {
-        view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
-        ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
-        view.contentMode = UIViewContentModeCenter;
-        label = [[UILabel alloc] initWithFrame:view.bounds];
-        label.backgroundColor = [UIColor clearColor];
-        label.textAlignment = UITextAlignmentCenter;
-        label.font = [label.font fontWithSize:50];
-        label.tag = 1;
-        [view addSubview:label];
+ 
+    if(carousel.type == categoryCarouselType){
+        //create new view if no view is available for recycling
+        if (view == nil)
+        {
+            view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
+            ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
+            view.contentMode = UIViewContentModeCenter;
+            label = [[UILabel alloc] initWithFrame:view.bounds];
+            label.backgroundColor = [UIColor clearColor];
+            label.textAlignment = UITextAlignmentCenter;
+            label.font = [label.font fontWithSize:50];
+            label.tag = 1;
+            [view addSubview:label];
+        }
+        else
+        {
+            //get a reference to the label in the recycled view
+            label = (UILabel *)[view viewWithTag:1];
+        }
+        
+        //set item label
+        //remember to always set any properties of your carousel item
+        //views outside of the `if (view == nil) {...}` check otherwise
+        //you'll get weird issues with carousel item content appearing
+        //in the wrong place in the carousel
+        label.text = categoryItems[index];
+        
+        [label setFont:[UIFont fontWithName:@"Helvetica" size:25]];
+    }else{
+        //create new view if no view is available for recycling
+        if (view == nil)
+        {
+            view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
+            ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
+            view.contentMode = UIViewContentModeCenter;
+            label = [[UILabel alloc] initWithFrame:view.bounds];
+            label.backgroundColor = [UIColor clearColor];
+            label.textAlignment = UITextAlignmentCenter;
+            label.font = [label.font fontWithSize:50];
+            label.tag = 1;
+            [view addSubview:label];
+        }
+        else
+        {
+            //get a reference to the label in the recycled view
+            label = (UILabel *)[view viewWithTag:1];
+        }
+        
+        //set item label
+        //remember to always set any properties of your carousel item
+        //views outside of the `if (view == nil) {...}` check otherwise
+        //you'll get weird issues with carousel item content appearing
+        //in the wrong place in the carousel
+        label.text = pageItems[index];
+        
+        [label setFont:[UIFont fontWithName:@"Helvetica" size:25]];
     }
-    else
-    {
-        //get a reference to the label in the recycled view
-        label = (UILabel *)[view viewWithTag:1];
-    }
     
-    //set item label
-    //remember to always set any properties of your carousel item
-    //views outside of the `if (view == nil) {...}` check otherwise
-    //you'll get weird issues with carousel item content appearing
-    //in the wrong place in the carousel
-    label.text = items[index];
-    [label setFont:[UIFont fontWithName:@"Helvetica" size:25]];
+
     
     return view;
 }
@@ -313,42 +398,75 @@
 - (NSUInteger)numberOfPlaceholdersInCarousel:(iCarousel *)carousel
 {
     //note: placeholder views are only displayed on some carousels if wrapping is disabled
-    return 2;
+    return 100;
 }
 
 - (UIView *)carousel:(iCarousel *)carousel placeholderViewAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
     UILabel *label = nil;
     
-    //create new view if no view is available for recycling
-    if (view == nil)
-    {
-        //don't do anything specific to the index within
-        //this `if (view == nil) {...}` statement because the view will be
-        //recycled and used with other index values later
-        view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
-        ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
-        view.contentMode = UIViewContentModeCenter;
+    if (carousel.type == categoryCarouselType) {
+        //create new view if no view is available for recycling
+        if (view == nil)
+        {
+            //don't do anything specific to the index within
+            //this `if (view == nil) {...}` statement because the view will be
+            //recycled and used with other index values later
+            view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
+            ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
+            view.contentMode = UIViewContentModeCenter;
+            
+            label = [[UILabel alloc] initWithFrame:view.bounds];
+            label.backgroundColor = [UIColor clearColor];
+            label.textAlignment = UITextAlignmentCenter;
+            label.font = [label.font fontWithSize:50.0f];
+            label.tag = 1;
+            [view addSubview:label];
+        }
+        else
+        {
+            //get a reference to the label in the recycled view
+            label = (UILabel *)[view viewWithTag:1];
+        }
         
-        label = [[UILabel alloc] initWithFrame:view.bounds];
-        label.backgroundColor = [UIColor clearColor];
-        label.textAlignment = UITextAlignmentCenter;
-        label.font = [label.font fontWithSize:50.0f];
-        label.tag = 1;
-        [view addSubview:label];
-    }
-    else
-    {
-        //get a reference to the label in the recycled view
-        label = (UILabel *)[view viewWithTag:1];
+        //set item label
+        //remember to always set any properties of your carousel item
+        //views outside of the `if (view == nil) {...}` check otherwise
+        //you'll get weird issues with carousel item content appearing
+        //in the wrong place in the carousel
+        label.text = (index == 0)? @"[": @"]";
+    }else{
+        //create new view if no view is available for recycling
+        if (view == nil)
+        {
+            //don't do anything specific to the index within
+            //this `if (view == nil) {...}` statement because the view will be
+            //recycled and used with other index values later
+            view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200.0f, 200.0f)];
+            ((UIImageView *)view).image = [UIImage imageNamed:@"page.png"];
+            view.contentMode = UIViewContentModeCenter;
+            
+            label = [[UILabel alloc] initWithFrame:view.bounds];
+            label.backgroundColor = [UIColor clearColor];
+            label.textAlignment = UITextAlignmentCenter;
+            label.font = [label.font fontWithSize:50.0f];
+            label.tag = 1;
+            [view addSubview:label];
+        }
+        else
+        {
+            //get a reference to the label in the recycled view
+            label = (UILabel *)[view viewWithTag:1];
+        }
+        
+        //set item label
+        //remember to always set any properties of your carousel item
+        //views outside of the `if (view == nil) {...}` check otherwise
+        //you'll get weird issues with carousel item content appearing
+        //in the wrong place in the carousel
+        label.text = (index == 0)? @"[": @"]";
     }
     
-    //set item label
-    //remember to always set any properties of your carousel item
-    //views outside of the `if (view == nil) {...}` check otherwise
-    //you'll get weird issues with carousel item content appearing
-    //in the wrong place in the carousel
-    label.text = (index == 0)? @"[": @"]";
     
     return view;
 }
@@ -400,25 +518,31 @@
 
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
-    NSNumber *item = (self.items)[index];
+    NSNumber *item = (self.categoryItems)[index];
     NSLog(@"Tapped view number: %@", item);
     
-    if(carousel.type == iCarouselTypeInvertedTimeMachine){
-        CCDirector* director = [CCDirector sharedDirector];
-        
-        // Init the View Controller
-        
-        UINavigationController*  navController = [[UINavigationController alloc] initWithRootViewController:director];
-        navController.navigationBarHidden = YES;
-        
-        AppDelegate* app = (AppDelegate* )[[UIApplication sharedApplication] delegate];
-        [app.window addSubview:navController.view];
-        [app.window makeKeyAndVisible];
-        [app.window setRootViewController: navController];
-        
-        // startup
-        CoreHolder *core = [CoreHolder sharedCoreHolder];
-        [core firstStart];
+    if(carousel.type == pageCarouselType){
+//        CCDirector* director = [CCDirector sharedDirector];
+//        
+//        // Init the View Controller
+//        
+//        UINavigationController*  navController = [[UINavigationController alloc] initWithRootViewController:director];
+//        navController.navigationBarHidden = YES;
+//        
+//        AppDelegate* app = (AppDelegate* )[[UIApplication sharedApplication] delegate];
+//        [app.window addSubview:navController.view];
+//        [app.window makeKeyAndVisible];
+//        [app.window setRootViewController: navController];
+//        
+//        // startup
+//        CoreHolder *core = [CoreHolder sharedCoreHolder];
+//        [core firstStart];
+    }else{
+        //pageCarousel.dataSource = nil;
+        NSInteger category_id = [categoryIDs[categoryCarousel.currentItemIndex] intValue];
+        NSLog(@"category id:%d has been selected.", category_id);
+        [self getPageITems:category_id];
+        [pageCarousel reloadData];
     }
 }
 
